@@ -29,6 +29,11 @@ class NmapParser(object):
         except ValueError:
             pass
 
+        title = ''
+        for child in root:
+            for grandchild in child.findall('address'):
+                title = grandchild.attrib['addr']
+
         for host in root.findall("host"):
             host_info = "### Host\n\n"
 
@@ -60,7 +65,7 @@ class NmapParser(object):
                 # filter on open ports
                 if 'open' != port_element.find("state").attrib.get('state'):
                     continue
-                title = "Open port: %s/%s" % (endpoint.port, endpoint.protocol)
+                title += " Open port: %s/%s" % (endpoint.port, endpoint.protocol)
                 description = host_info
                 description += "**Port/Protocol:** %s/%s\n" % (endpoint.port, endpoint.protocol)
 
