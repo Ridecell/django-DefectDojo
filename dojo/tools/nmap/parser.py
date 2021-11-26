@@ -31,6 +31,18 @@ class NmapParser(object):
 
         for host in root.findall("host"):
             host_info = "### Host\n\n"
+            # find Description element and add it to the description
+            tag = ''
+            description_element = host.find("Description")
+            if description_element is not None:
+                tag = description_element.find("AccountId").text
+                host_info += "**AccountID:** %s\n" % tag
+                host_info += "**Status:** %s\n" % description_element.find("Status").text
+                host_info += "**Description:** %s\n" % description_element.find("Description").text
+                host_info += "**SecurityGroup:** %s\n" % description_element.find("Group").text
+                host_info += "**InstanceId:** %s\n" % description_element.find("InstanceId").text
+
+            host_info += "\n\n"
 
             ip = host.find("address[@addrtype='ipv4']").attrib['addr']
             if ip is not None:
@@ -78,24 +90,6 @@ class NmapParser(object):
                     description += service_info
 
                 description += "\n\n"
-
-                # find Description element and add it to the description
-                tag = ''
-                desc_element = root.find('Description')
-                if desc_element is not None:
-                    for i in desc_element:
-                        if 'AccountId' in i.tag:
-                            description += "**AccountID:** %s\n" % i.text
-                            tag = i.text
-                        if 'Status' in i.tag:
-                            description += "**Status:** %s\n" % i.text
-                        if 'Description' in i.tag:
-                            description += "**Description:** %s\n" % i.text
-                        if 'Group' in i.tag:
-                            description += "**Group:** %s\n" % i.text
-                        if 'InstanceId' in i.tag:
-                            description += "**InstanceId:** %s\n" % i.text
-                description += '\n\n'
 
                 # manage some script like https://github.com/vulnersCom/nmap-vulners
                 for script_element in port_element.findall('script[@id="vulners"]'):
