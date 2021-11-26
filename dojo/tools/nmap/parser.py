@@ -39,7 +39,7 @@ class NmapParser(object):
                 host_info += "**AccountID:** %s\n" % tag
                 host_info += "**Status:** %s\n" % description_element.find("Status").text
                 host_info += "**Description:** %s\n" % description_element.find("Description").text
-                host_info += "**Group:** %s\n" % description_element.find("Group").text
+                host_info += "**SecurityGroup:** %s\n" % description_element.find("Group").text
                 host_info += "**InstanceId:** %s\n" % description_element.find("InstanceId").text
 
             host_info += "\n\n"
